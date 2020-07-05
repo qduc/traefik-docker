@@ -1,0 +1,34 @@
+version: '3.3'
+
+services:
+  traefik:
+    # The official v2 Traefik docker image
+    image: traefik:v2.2
+    # Enables the web UI and tells Traefik to listen to docker
+    # command: --api.insecure=true --providers.docker
+    environment:
+      - CF_DNS_API_TOKEN_FILE=/run/secrets/cf_dns_api_token
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The HTTPS port
+      - "443:443"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./conf.d:/etc/traefik.conf.d
+    secrets:
+      - cf_dns_api_token
+    restart: unless-stopped
+      
+networks:
+  default:
+    external:
+      name: tfk
+
+secrets:
+  cf_dns_api_token:
+    file: ./cf_dns_api_token

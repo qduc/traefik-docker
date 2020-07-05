@@ -1,0 +1,27 @@
+version: "3"
+
+entryPoints:
+  web:
+    address: ":80"
+
+  web-secure:
+    address: ":443"
+
+certificatesResolvers:
+  le:
+    acme:
+      email: qduc159@gmail.com
+      storage: acme.json
+      dnsChallenge:
+        provider: cloudflare
+
+# Docker configuration backend
+providers:
+  docker:
+    exposedByDefault: false
+  file:
+    directory: /etc/traefik.conf.d
+
+# API and dashboard configuration
+api:
+  insecure: true

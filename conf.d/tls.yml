@@ -1,0 +1,17 @@
+http:
+  routers:
+    home:
+      rule: "Host(`home.ducnq.com`)"
+      tls:
+        certResolver: "le"
+        domains:
+          - main: "home.ducnq.com"
+            sans:
+              - "*.home.ducnq.com"
+      service: noop@internal
+
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
